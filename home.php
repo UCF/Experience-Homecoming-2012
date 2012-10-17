@@ -1,6 +1,13 @@
-<?php $options = get_option(THEME_OPTIONS_NAME);?>
-<?php if($options['site_description']):?>
-<?php include_once('template-home-description.php');?>
-<?php else:?>
-<?php include_once('template-home-nodescription.php');?>
-<?php endif;?>
+<?php get_header(); ?>
+	<div class="row page-content" id="home">
+		<div class="span9">
+			<? if(!is_front_page())	{ ?>
+					<h1><?php the_title();?></h1>
+			<? } ?>
+			<?php the_content();?>
+		</div>
+		<div class="span3" id="sidebar">
+			<?=get_sidebar();?>
+		</div>
+	</div>
+<?php get_footer();?>

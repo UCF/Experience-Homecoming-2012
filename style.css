@@ -40,5 +40,5 @@ select#UCFHBHeaderLinks {
 
 #home #content-col { overflow: hidden; }
 
-.box { background-color: #ccc; margin-bottom: 20px; }
+.box { background-color: #ccc; margin-bottom: 20px; max-width: 250px; margin-right: 20px; }
 .box-inner { padding: 20px; }

@@ -27,7 +27,7 @@
 						$pub_date = get_post_meta($post->ID, 'feedsubmission_original_pub_time', TRUE);
 						$service  = get_post_meta($post->ID, 'feedsubmission_service', TRUE);
 					?>
-						<div class="span3 box">
+						<div class="box">
 							<div class="box-inner">
 								<h3><?=the_title();?></h3>
 								<?=the_content();?>

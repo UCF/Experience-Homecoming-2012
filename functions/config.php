@@ -241,6 +241,9 @@ Config::$scripts = array(
 	'http://universityheader.ucf.edu/bar/js/university-header.js',
 	THEME_STATIC_URL.'/bootstrap/build/js/bootstrap.js',
 	array('name' => 'base-script',  'src' => THEME_JS_URL.'/webcom-base.js',),
+	THEME_JS_URL.'/jquery.imagesloaded.min.js',
+	THEME_JS_URL.'/jquery.infinitescroll.min.js',
+	THEME_JS_URL.'/jquery.masonry.min.js',
 	array('name' => 'theme-script', 'src' => THEME_JS_URL.'/script.js',),
 );
 

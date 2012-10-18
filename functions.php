@@ -120,7 +120,7 @@ function get_master_feed() {
 				$item_array = array(
 					'feedsubmission_service' => $key,
 					'feedsubmission_author' => $item->get_author(),
-					'feedsubmission_original_pub_time' => $item->get_date('j F Y | g:i a'),
+					'feedsubmission_original_pub_time' => $item->get_date('j F Y g:i a'),
 					'title' => $item->get_title(),
 					'post_content' => $item->get_content(),
 				);
@@ -128,6 +128,12 @@ function get_master_feed() {
 			}
 		}
 	}
+	
+	function sort_by_date($a, $b) {
+		return strtotime($a['feedsubmission_original_pub_time']) - strtotime($b['feedsubmission_original_pub_time']);
+	}
+	usort($master_array, 'sort_by_date');
+
 	
 	return $master_array;
 }

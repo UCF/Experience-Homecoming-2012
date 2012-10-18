@@ -351,6 +351,12 @@ class FeedSubmission extends CustomPostType {
 				'id' => $prefix.'original_pub_time',
 				'type' => 'text',
 			),
+			array(
+				'name' => 'Image',
+				'desc' => 'An image uploaded by the author (direct link.)',
+				'id' => $prefix.'image',
+				'type' => 'text',
+			),
 		);
 	}
 }

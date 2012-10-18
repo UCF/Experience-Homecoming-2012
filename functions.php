@@ -125,13 +125,22 @@ function get_master_feed() {
 						$author = $credit->get_name();
 					}
 				}
+				// Content
+				$content = $item->get_content();
+				// Get an image, if it exists within the post content
+				if (preg_match('/(<img[^>]+>)/i', $content, $matches)) {
+					$image = explode('src="', $matches[0]);
+					$image = explode('"', $image[1]);
+					$image = $image[0];
+				}
 				// Set up an array for each item
 				$item_array = array(
-					'feedsubmission_service' => $key,
-					'feedsubmission_author' => $author,
-					'feedsubmission_original_pub_time' => $item->get_date(),
-					'title' => $item->get_title(),
-					'post_content' => $item->get_content(),
+					'feedsubmission_service' 			=> $key,
+					'feedsubmission_author' 			=> $author,
+					'feedsubmission_original_pub_time' 	=> $item->get_date(),
+					'feedsubmission_image' 				=> $image,
+					'title' 							=> $item->get_title(),
+					'post_content' 						=> $content,
 				);
 				// Add the item array to the master array
 				$master_array[] = $item_array;
@@ -148,6 +157,55 @@ function get_master_feed() {
 }
 
 
-var_dump(get_master_feed());
+/**
+ * Creates new FeedSubmission post drafts given an array of data.
+ * Intended to be called in a separate file, run by a cron job with
+ * a set time interval.
+ * 
+ **/
+function create_feedsubmissions($feed=null) {
+	if (!$feed) { return 'No feed specified.'; }
+	if (empty($feed)) { return 'Feed returned no content.'; }
+	
+	elseif (!empty($feed)) {
+		$count = 0;
+		foreach ($feed as $item) {
+			// If a Feed Submission already exists with the same contents, don't re-submit it
+			$already_submitted 	= false;
+			$similar_post 		= get_page_by_title($item['title'], 'OBJECT', 'feedsubmission');
+			if ( // If a similarly-titled post exists, and its author, original publish date, and service match:
+				($similar_post) &&
+				(get_post_meta($similar_post->ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author']) &&
+				(get_post_meta($similar_post->ID, 'feedsubmission_original_pub_time', TRUE) == $item['feedsubmission_original_pub_time']) &&
+				(get_post_meta($similar_post->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'])
+				) {
+					$already_submitted = true;
+			}
+			
+			if ($already_submitted == false) {
+				// Setup primary post data
+				$post_data = array(
+					'post_type'		=> 'feedsubmission',
+					'post_title'    => $item['title'],
+					'post_content'  => $item['post_content'],
+					'post_status'   => 'pending',
+					'post_date'		=> date('Y-m-d H:i:s'),
+				);			
+				
+				// Insert the post into the database and return its ID
+				$post_id = wp_insert_post( $post_data, $wp_error );
+				
+				// Add meta data...get_post_custom always returns empty so we have to do this manually for each field :(
+				add_post_meta($post_id, 'feedsubmission_service', $item['feedsubmission_service']);
+				add_post_meta($post_id, 'feedsubmission_author' , $item['feedsubmission_author' ]);
+				add_post_meta($post_id, 'feedsubmission_original_pub_time', $item['feedsubmission_original_pub_time']);
+				add_post_meta($post_id, 'feedsubmission_image', $item['feedsubmission_image']);
+					
+				$count++;
+			}
+		}
+		return $count.' new Feed Submission pending posts created at '.date('Y-m-d H:i:s');
+	}
+}
 
 ?>

@@ -22,7 +22,7 @@ function build_hashtag_query($tagname='tags') {
 }
 
 /**
- * Retrieve feeds based on selected services in Theme Options.
+ * Retrieve feeds based on hashtags specified in Theme Options.
  * 
  * @return array
  **/
@@ -40,22 +40,99 @@ function fetch_flickr() {
 			
 			return $items;
 		}
-		else { return 'Error in generating feed object'; }
+		else { return 'Error in generating Flickr feed object'; }
 	}
 }
 function fetch_instagram() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('instagram', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
-		// http://instagram.com/tags/ucf/feed/recent.rss
+		$max 	= is_numeric($theme_options['instagram_max_results']) ? $theme_options['hashtags'] : 20;
+		$feed 	= fetch_feed('http://instagram.com/tags/'.preg_replace('/[^A-Za-z0-9]/', "", $theme_options['hashtags']).'/feed/recent.rss');
+		
+		// TODO: Fix feed url to accept more than one tag at a time...
+		
+		if (!is_wp_error($feed)) { 
+			// Figure out how many total items there are, but limit it to the max number set. 
+			$total = $feed->get_item_quantity($max); 
+			// Build an array of all the items, starting with element 0 (first element).
+			$items = $feed->get_items(0, $total);
+			
+			return $items;
+		}
+		else { return 'Error in generating Instagram feed object'; }
+		
 	}
 }
 function fetch_twitter() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('twitter', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
+		$max 	= is_numeric($theme_options['twitter_max_results']) ? $theme_options['hashtags'] : 20;
+		// NOTE: RSS will be completely deprecated by March 2013; this is only a temporary solution!
+		$feed 	= fetch_feed('http://search.twitter.com/search.rss?'.build_hashtag_query('q'));
 		
+		if (!is_wp_error($feed)) { 
+			// Figure out how many total items there are, but limit it to the max number set. 
+			$total = $feed->get_item_quantity($max); 
+			// Build an array of all the items, starting with element 0 (first element).
+			$items = $feed->get_items(0, $total);
+			
+			return $items;
+		}
+		else { return 'Error in generating Twitter feed object'; }
 	}
 }
 
 
+/**
+ * Master feed builder
+ * 
+ * Uses fetch functions (fetch_flickr(), fetch_instagram(), fetch_twitter())
+ * to get all available feeds and return a single array with only the relevant 
+ * information needed to create new posts.
+ *
+ * @return array
+ **/
+function get_master_feed() {
+	$theme_options = get_option(THEME_OPTIONS_NAME);
+	
+	// Fetch initial feeds; check if the services are activated first
+	if ( (in_array('flickr', $theme_options['enabled_services'])) ) {
+		$feed_flickr = fetch_flickr();
+	}
+	if ( (in_array('instagram', $theme_options['enabled_services'])) ) {
+		$feed_instagram = fetch_instagram();
+	}
+	if ( (in_array('twitter', $theme_options['enabled_services'])) ) {
+		$feed_twitter = fetch_twitter();
+	}
+	
+	$services = array(
+		'flickr' 		=> $feed_flickr, 
+		'instagram' 	=> $feed_instagram, 
+		'twitter' 		=> $feed_twitter,
+	);
+	$master_array = array();
+	
+	// If the feeds aren't empty, get the content we need
+	foreach ($services as $key => $feed) {
+		if (!empty($feed)) {
+			foreach ($feed as $item) {
+				$item_array = array(
+					'feedsubmission_service' => $key,
+					'feedsubmission_author' => $item->get_author(),
+					'feedsubmission_original_pub_time' => $item->get_date('j F Y | g:i a'),
+					'title' => $item->get_title(),
+					'post_content' => $item->get_content(),
+				);
+				$master_array[] = $item_array;
+			}
+		}
+	}
+	
+	return $master_array;
+}
+
+
+var_dump(get_master_feed());
 
 ?>

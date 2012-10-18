@@ -155,8 +155,8 @@ Config::$theme_settings = array(
 		new TextareaField(array(
 			'name'        => 'Searchable Hashtags',
 			'id'          => THEME_OPTIONS_NAME.'[hashtags]',
-			'description' => 'Hashtags and keywords to search selected feeds for content. Separate with commas.',
-			'default'     => 'ucfhomecoming, ehc2012, ucfhc',
+			'description' => 'Hashtags and keywords to search selected feeds for content. Separate with commas. Note that Twitter will search for tweets that include ALL hashtags; Flickr will search for photos that include ANY hashtags; Instagram will only support one hashtag.',
+			'default'     => '#ehc2012',
 			'value'       => $theme_options['hashtags'],
 		)),
 		new TextField(array(

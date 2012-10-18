@@ -343,6 +343,7 @@ class FeedSubmission extends CustomPostType {
 				'desc' => 'The user that submitted the content.',
 				'id' => $prefix.'author',
 				'type' => 'text',
+				'std' => 'Anonymous',
 			),
 			array(
 				'name' => 'Original Publish Date/Time',

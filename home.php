@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 	<div class="row-fluid page-content" id="home">
 		<div class="span3" id="sidebar">
-			<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a generic post loop.</p>
+			<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a custom post type loop.</p>
 			<?=get_sidebar();?>
 			<p id="page-nav"><?php /*next_posts_link('&laquo; Older Entries', $loop->max_num_pages)*/ print "<a href='".site_url()."'>Next</a>"; ?></p>
 		</div>
@@ -19,11 +19,18 @@
 					);
 					$loop = new WP_Query($args);
 					while ( $loop->have_posts() ) : $loop->the_post();
+						
+						$author   = get_post_meta($post->ID, 'feedsubmission_author', TRUE);
+						$pub_date = get_post_meta($post->ID, 'feedsubmission_original_pub_time', TRUE);
+						$service  = get_post_meta($post->ID, 'feedsubmission_service', TRUE);
 					?>
 						<div class="span3 box">
 							<div class="box-inner">
-								<?=the_title();?>
+								<?=the_post_thumbnail('large')?>
+								<h3><?=the_title();?></h3>
 								<?=the_content();?>
+								<small><?=$author?> <span class="pubtime">at <?=$pub_date?></span></small>
+								<div class="<?=$service?>-icon"><?=$service?></div>
 							</div>
 						</div>
 					<?php

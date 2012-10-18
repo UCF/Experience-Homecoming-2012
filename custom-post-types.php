@@ -315,7 +315,7 @@ class FeedSubmission extends CustomPostType {
 		$new_item       = 'New Feed Post',
 		$public         = True,
 		$use_editor     = True,
-		$use_thumbnails = True,
+		$use_thumbnails = False,
 		$use_order      = False,
 		$use_title      = True,
 		$use_metabox    = True,

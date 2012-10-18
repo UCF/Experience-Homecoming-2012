@@ -117,13 +117,23 @@ function get_master_feed() {
 	foreach ($services as $key => $feed) {
 		if (!empty($feed)) {
 			foreach ($feed as $item) {
+				// Get the author
+				$enclosure = $item->get_enclosure(0);
+				$credits = $enclosure->get_credits();
+				if ($credits) {
+					foreach ($credits as $credit){ 
+						$author = $credit->get_name();
+					}
+				}
+				// Set up an array for each item
 				$item_array = array(
 					'feedsubmission_service' => $key,
-					'feedsubmission_author' => $item->get_author(),
-					'feedsubmission_original_pub_time' => $item->get_date('j F Y g:i a'),
+					'feedsubmission_author' => $author,
+					'feedsubmission_original_pub_time' => $item->get_date(),
 					'title' => $item->get_title(),
 					'post_content' => $item->get_content(),
 				);
+				// Add the item array to the master array
 				$master_array[] = $item_array;
 			}
 		}
@@ -134,7 +144,6 @@ function get_master_feed() {
 	}
 	usort($master_array, 'sort_by_date');
 
-	
 	return $master_array;
 }
 

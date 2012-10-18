@@ -13,7 +13,7 @@ function __init__(){
 	add_theme_support('post-thumbnails');
 	add_image_size('homepage', 620);
 	add_image_size('homepage-secondary', 540);
-	register_nav_menu('main-menu', __('Header Menu'));
+	register_nav_menu('main-menu', __('Main Menu'));
 	register_nav_menu('footer-menu', __('Footer Menu'));
 	register_sidebar(array(
 		'name'          => __('Sidebar'),

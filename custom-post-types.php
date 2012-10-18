@@ -304,4 +304,53 @@ class Post extends CustomPostType {
 		);
 	}
 }
+
+class FeedSubmission extends CustomPostType {
+	public
+		$name           = 'feedsubmission',
+		$plural_name    = 'Feed Submissions',
+		$singular_name  = 'Feed Submission',
+		$add_new_item   = 'Add New Feed Submission',
+		$edit_item      = 'Edit Feed Submission',
+		$new_item       = 'New Feed Post',
+		$public         = True,
+		$use_editor     = True,
+		$use_thumbnails = True,
+		$use_order      = False,
+		$use_title      = True,
+		$use_metabox    = True,
+		$taxonomies     = array('post_tag');
+	
+	public function fields() {
+		$prefix = $this->options('name').'_';
+		
+		$theme_options = get_option(THEME_OPTIONS_NAME);
+		$options_array = array();
+		foreach ($theme_options['enabled_services'] as $key => $val) {
+			$options_array[ucwords($val)] .= $val;
+		}
+		
+		return array(
+			array(
+				'name' => 'Service',
+				'desc' => 'The service from which this post was submitted.',
+				'id' => $prefix.'service',
+				'type' => 'radio',
+				'options' => $options_array,
+			),
+			array(
+				'name' => 'Author',
+				'desc' => 'The user that submitted the content.',
+				'id' => $prefix.'author',
+				'type' => 'text',
+			),
+			array(
+				'name' => 'Original Publish Date/Time',
+				'desc' => 'The day/time that the content was originally submitted on the service it came from.',
+				'id' => $prefix.'original_pub_time',
+				'type' => 'text',
+			),
+		);
+	}
+}
 ?>

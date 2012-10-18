@@ -38,4 +38,7 @@ select#UCFHBHeaderLinks {
 
 /* Site Styles */
 
+#home #content-col { overflow: hidden; }
 
+.box { background-color: #ccc; margin-bottom: 20px; }
+.box-inner { padding: 20px; }

@@ -1,10 +1,11 @@
 <?php get_header(); ?>
 	<div class="row-fluid page-content" id="home">
 		<div class="span3" id="sidebar">
+			<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a generic post loop.</p>
 			<?=get_sidebar();?>
+			<p id="page-nav"><?php /*next_posts_link('&laquo; Older Entries', $loop->max_num_pages)*/ print "<a href='".site_url()."'>Next</a>"; ?></p>
 		</div>
 		<div class="span9" id="content-col">
-			<div class="row-fluid">
 				<? if(!is_front_page())	{ ?>
 						<h1><?php the_title();?></h1>
 				<? } ?>
@@ -12,7 +13,7 @@
 				<?php
 					$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 					$args = array( 
-						'post_type' 	 => 'post', 
+						'post_type' 	 => 'feedsubmission', 
 						'posts_per_page' => 4,
 						'paged'			 => $paged,
 					);
@@ -20,36 +21,33 @@
 					while ( $loop->have_posts() ) : $loop->the_post();
 					?>
 						<div class="span3 box">
-							<?=the_title();?>
-							<?=the_content();?>
+							<div class="box-inner">
+								<?=the_title();?>
+								<?=the_content();?>
+							</div>
 						</div>
 					<?php
 					endwhile;
-				?>			
-			</div>
-			<div class="row-fluid">
-				<div class="span9">
-					<p id="page-nav"><?php next_posts_link('&laquo; Older Entries', $new_query->max_num_pages) ?></p>
-				</div>
-			</div>
+				?>
 		</div>
 	</div>
 <?php if (is_front_page()) { ?>
 	<script>
 		$(function(){
-			var $container = $('#container');
+			var $container = $('#content-col');
 		
 			$container.imagesLoaded(function(){
 			  $container.masonry({
 				itemSelector: '.box',
-				columnWidth: 100
+				columnWidth: 100,
+				isAnimated: true
 			  });
 			});
 			
 			$container.infinitescroll({
 			  navSelector  : '#page-nav',    // selector for the paged navigation 
 			  nextSelector : '#page-nav a',  // selector for the NEXT link (to page 2)
-			  itemSelector : '.span3',     // selector for all items you'll retrieve
+			  itemSelector : '.box',     // selector for all items you'll retrieve
 			  loading: {
 				  finishedMsg: 'No more pages to load.',
 				  img: 'http://i.imgur.com/6RMhx.gif'

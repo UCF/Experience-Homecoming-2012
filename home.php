@@ -16,6 +16,9 @@
 						'post_type' 	 => 'feedsubmission', 
 						'posts_per_page' => 4,
 						'paged'			 => $paged,
+						
+						'post_status'				 => 'pending' // Delete me after testing!
+						
 					);
 					$loop = new WP_Query($args);
 					while ( $loop->have_posts() ) : $loop->the_post();
@@ -26,7 +29,6 @@
 					?>
 						<div class="span3 box">
 							<div class="box-inner">
-								<?=the_post_thumbnail('large')?>
 								<h3><?=the_title();?></h3>
 								<?=the_content();?>
 								<small><?=$author?> <span class="pubtime">at <?=$pub_date?></span></small>

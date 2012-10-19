@@ -169,18 +169,23 @@ function get_master_feed() {
 				}
 				// Content
 				$content = $item->get_content();
-				$image = '';
 				// Get an image, if it exists within the post content
+				$image = '';
 				if (preg_match('/(<img[^>]+>)/i', $content, $matches)) {
 					$image = explode('src="', $matches[0]);
 					$image = explode('"', $image[1]);
 					$image = $image[0];
 				}
+				// Instagram time stamps are totally wrong, so let's fix them
+				$pub_time = $item->get_date();
+				if ($key == 'instagram') {
+					$pub_time = date('j F Y, g:i a', strtotime($pub_time.' -11 hours'));
+				}
 				// Set up an array for each item
 				$item_array = array(
 					'feedsubmission_service' 			=> $key,
 					'feedsubmission_author' 			=> $author,
-					'feedsubmission_original_pub_time' 	=> $item->get_date(),
+					'feedsubmission_original_pub_time' 	=> $pub_time,
 					'feedsubmission_image' 				=> $image,
 					'title' 							=> $item->get_title(),
 					'post_content' 						=> $content,

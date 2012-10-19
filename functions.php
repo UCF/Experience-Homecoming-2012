@@ -8,6 +8,48 @@ require_once('shortcodes.php');         		# Per theme shortcodes
 
 //Add theme-specific functions here.
 
+
+/**
+ * Custom columns for 'FeedSubmission' post type
+ **/
+function edit_feedsubmission_columns() {
+	$columns = array(
+		'cb'        	=> '<input type="checkbox" />',
+		'title'     	=> 'Title',
+		'image' 		=> 'Image',
+		'service'		=> 'Service',
+		'orig_pub_time' => 'Original Submission Date',
+	);
+	return $columns;
+}
+add_action('manage_edit-feedsubmission_columns', 'edit_feedsubmission_columns');
+function manage_feedsubmission_columns( $column, $post_id ) {
+	global $post;
+	switch ( $column ) {
+		case 'image':
+			if (get_post_meta( $post->ID, 'feedsubmission_image', true )) {
+				print '<img src="'.get_post_meta( $post->ID, 'feedsubmission_image', true ).'" style="max-height: 100px;" />';
+			}
+			else { print '(No image)'; }
+			break;
+		case 'service':
+			print get_post_meta( $post->ID, 'feedsubmission_service', true );
+			break;
+		case 'orig_pub_time':
+			print get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true );
+			break;
+		default:
+			break;
+	}
+}
+add_action('manage_feedsubmission_posts_custom_column', 'manage_feedsubmission_columns', 10, 2);
+function sortable_feedsubmission_columns( $columns ) {
+	$columns['orig_pub_time'] = 'orig_pub_time';
+	return $columns;
+}
+add_action('manage_edit-feedsubmission_sortable_columns', 'sortable_feedsubmission_columns');
+
+
 /**
  * Format Hashtag list for use in a query string
  *
@@ -127,6 +169,7 @@ function get_master_feed() {
 				}
 				// Content
 				$content = $item->get_content();
+				$image = '';
 				// Get an image, if it exists within the post content
 				if (preg_match('/(<img[^>]+>)/i', $content, $matches)) {
 					$image = explode('src="', $matches[0]);

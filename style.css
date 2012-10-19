@@ -40,5 +40,22 @@ select#UCFHBHeaderLinks {
 
 #home #content-col { overflow: hidden; }
 
-.box { background-color: #ccc; margin-bottom: 20px; max-width: 250px; margin-right: 20px; }
+.box { background-color: #ccc; margin-bottom: 20px; width: 310px; margin-right: 20px; }
 .box-inner { padding: 20px; }
+
+/* Infinite Scroll loader */
+#infscr-loading {
+	text-align: center;
+	z-index: 100;
+	position: fixed;
+	left: 45%;
+	bottom: 40px;
+	width: 200px;
+	padding: 10px;
+	background: #000;
+	opacity: 0.8;
+	color: #FFF;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+} 

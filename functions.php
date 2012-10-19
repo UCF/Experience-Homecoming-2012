@@ -50,6 +50,21 @@ function sortable_feedsubmission_columns( $columns ) {
 add_action('manage_edit-feedsubmission_sortable_columns', 'sortable_feedsubmission_columns');
 
 
+/** 
+ * Get post/page by title, with an extra argument for specifying the post status
+ * Basically a copy of get_page_by_title()
+ * 
+ **/
+function get_post_by_title_and_status($page_title='', $output=OBJECT, $post_type='post', $post_status='published') {
+	global $wpdb;
+	$match = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type= %s AND post_status= %s", $page_title, $post_type, $post_status ) );
+	if ( $match ) {
+		return get_page($match, $output);
+	}
+	return null;
+}
+
+
 /**
  * Format Hashtag list for use in a query string
  *
@@ -248,20 +263,35 @@ function create_feedsubmissions($feed=null) {
 		foreach ($feed as $item) {
 			// If a Feed Submission already exists with the same contents, don't re-submit it
 			$already_submitted 	= false;
-			$similar_post 		= get_page_by_title($item['title'], 'OBJECT', 'feedsubmission');
-			if ( // If a similarly-titled post exists, and its author and service match:
-				$similar_post !== NULL &&
-				(get_post_meta($similar_post->ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author']) &&
-				(get_post_meta($similar_post->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'])
+			$clean_title = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)\#@\'\;\:\/%&-]/s', '', $item['title']);
+			$similar_pending	= get_post_by_title_and_status($clean_title, 'OBJECT', 'feedsubmission', 'pending');
+			$similar_published	= get_post_by_title_and_status($clean_title, 'OBJECT', 'feedsubmission', 'published');
+			if ($similar_pending !== NULL) {
+				$already_submitted = true;
+				if ( 
+					get_post_meta($similar_pending->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'] &&
+					get_post_meta($similar_pending->ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author'] &&
+					get_post_meta($similar_pending->ID, 'feedsubmission_original_post_time', TRUE) == $item['feedsubmission_original_post_time']
 				) {
 					$already_submitted = true;
+				}
+			}
+			elseif ($similar_published !== NULL) {
+				$already_submitted = true;
+				if ( 
+					get_post_meta($similar_published->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'] &&
+					get_post_meta($similar_published>ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author'] &&
+					get_post_meta($similar_published->ID, 'feedsubmission_original_post_time', TRUE) == $item['feedsubmission_original_post_time']
+				) {
+					$already_submitted = true;
+				}
 			}
 			
-			if ($already_submitted == false) {
+			if ($already_submitted == false && $item['feedsubmission_service'] !== false) {
 				// Setup primary post data
 				$post_data = array(
 					'post_type'		=> 'feedsubmission',
-					'post_title'    => $item['title'],
+					'post_title'    => $clean_title,
 					'post_content'  => $item['post_content'],
 					'post_status'   => 'pending',
 					'post_date'		=> date('Y-m-d H:i:s'),

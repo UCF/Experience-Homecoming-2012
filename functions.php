@@ -28,7 +28,7 @@ function manage_feedsubmission_columns( $column, $post_id ) {
 	switch ( $column ) {
 		case 'image':
 			if (get_post_meta( $post->ID, 'feedsubmission_image', true )) {
-				print '<img src="'.get_post_meta( $post->ID, 'feedsubmission_image', true ).'" style="max-height: 100px;" />';
+				print '<a href="'.get_post_meta( $post->ID, 'feedsubmission_image', true ).'"><img src="'.get_post_meta( $post->ID, 'feedsubmission_image', true ).'" style="max-height: 100px;" /></a>';
 			}
 			else { print '(No image)'; }
 			break;
@@ -36,7 +36,7 @@ function manage_feedsubmission_columns( $column, $post_id ) {
 			print get_post_meta( $post->ID, 'feedsubmission_service', true );
 			break;
 		case 'orig_pub_time':
-			print get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true );
+			print date('Y/m/d @ g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
 			break;
 		default:
 			break;
@@ -63,6 +63,17 @@ function build_hashtag_query($tagname='tags') {
 	}
 }
 
+
+/**
+ * Function to reset the cache lifetime used by fetch_feed to cache feed data.
+ * Change the return value to change the number of seconds before a cache reset.
+ *
+ **/
+function cache_reset( $seconds ) {
+  	return 240;
+} 
+
+
 /**
  * Retrieve feeds based on hashtags specified in Theme Options.
  * 
@@ -72,7 +83,10 @@ function fetch_flickr() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('flickr', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
 		$max 	= is_numeric($theme_options['flickr_max_results']) ? $theme_options['hashtags'] : 20; // fallback check for valid max #
+		
+		add_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );		
 		$feed 	= fetch_feed('http://api.flickr.com/services/feeds/photos_public.gne?format=rss2&tagmode=ANY&'.build_hashtag_query('tags'));
+		remove_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
 		
 		if (!is_wp_error($feed)) { 
 			// Figure out how many total items there are, but limit it to the max number set. 
@@ -89,7 +103,10 @@ function fetch_instagram() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('instagram', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
 		$max 	= is_numeric($theme_options['instagram_max_results']) ? $theme_options['hashtags'] : 20;
+		
+		add_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
 		$feed 	= fetch_feed('http://instagram.com/tags/'.preg_replace('/[^A-Za-z0-9]/', "", $theme_options['hashtags']).'/feed/recent.rss');
+		remove_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
 		
 		// TODO: Fix feed url to accept more than one tag at a time...
 		
@@ -109,8 +126,11 @@ function fetch_twitter() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('twitter', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
 		$max 	= is_numeric($theme_options['twitter_max_results']) ? $theme_options['hashtags'] : 20;
-		// NOTE: RSS will be completely deprecated by March 2013; this is only a temporary solution!
+		
+		// NOTE: Twitter RSS will be completely deprecated by March 2013; this is only a temporary solution!
+		add_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
 		$feed 	= fetch_feed('http://search.twitter.com/search.rss?'.build_hashtag_query('q'));
+		remove_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
 		
 		if (!is_wp_error($feed)) { 
 			// Figure out how many total items there are, but limit it to the max number set. 
@@ -160,11 +180,19 @@ function get_master_feed() {
 		if (!empty($feed)) {
 			foreach ($feed as $item) {
 				// Get the author
-				$enclosure = $item->get_enclosure(0);
-				$credits = $enclosure->get_credits();
-				if ($credits) {
-					foreach ($credits as $credit){ 
-						$author = $credit->get_name();
+				$author = '';
+				if ($key == 'twitter') {
+					$author = $item->get_author();
+					$author = explode('@', $author->get_email());
+					$author = $author[0];
+				}
+				else {
+					$enclosure = $item->get_enclosure(0);
+					$credits = $enclosure->get_credits();
+					if ($credits) {
+						foreach ($credits as $credit){ 
+							$author = $credit->get_name();
+						}
 					}
 				}
 				// Content
@@ -176,10 +204,15 @@ function get_master_feed() {
 					$image = explode('"', $image[1]);
 					$image = $image[0];
 				}
+				// Original Pub Time
+				$pub_time = date('YmdHis', strtotime($item->get_date()));
 				// Instagram time stamps are totally wrong, so let's fix them
-				$pub_time = $item->get_date();
 				if ($key == 'instagram') {
-					$pub_time = date('j F Y, g:i a', strtotime($pub_time.' -11 hours'));
+					$pub_time = date('YmdHis', strtotime($pub_time.' -11 hours'));
+				}
+				// Twitter time stamps are also wrong
+				if ($key == 'twitter') {
+					$pub_time = date('YmdHis', strtotime($pub_time.' -4 hours'));
 				}
 				// Set up an array for each item
 				$item_array = array(
@@ -195,11 +228,6 @@ function get_master_feed() {
 			}
 		}
 	}
-	
-	function sort_by_date($a, $b) {
-		return strtotime($a['feedsubmission_original_pub_time']) - strtotime($b['feedsubmission_original_pub_time']);
-	}
-	usort($master_array, 'sort_by_date');
 
 	return $master_array;
 }
@@ -221,10 +249,9 @@ function create_feedsubmissions($feed=null) {
 			// If a Feed Submission already exists with the same contents, don't re-submit it
 			$already_submitted 	= false;
 			$similar_post 		= get_page_by_title($item['title'], 'OBJECT', 'feedsubmission');
-			if ( // If a similarly-titled post exists, and its author, original publish date, and service match:
-				($similar_post) &&
+			if ( // If a similarly-titled post exists, and its author and service match:
+				$similar_post !== NULL &&
 				(get_post_meta($similar_post->ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author']) &&
-				(get_post_meta($similar_post->ID, 'feedsubmission_original_pub_time', TRUE) == $item['feedsubmission_original_pub_time']) &&
 				(get_post_meta($similar_post->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'])
 				) {
 					$already_submitted = true;

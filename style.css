@@ -41,9 +41,12 @@ select#UCFHBHeaderLinks {
 #home #content-col { overflow: hidden; }
 
 .box { background-color: #ccc; margin-bottom: 20px; width: 310px; margin-right: 20px; }
-.box-inner { padding: 20px; }
+.box-inner { padding: 20px; overflow: hidden; }
+.box-inner .post-info { width: 100%; overflow: hidden; min-height: 30px; line-height: 14px; margin-top: 10px; }
+.post-info.flickr { background: url('static/img/social-flickr-30x30.png') bottom right no-repeat; }
+.post-info.instagram { background: url('static/img/social-instagram-30x30.png') bottom right no-repeat; }
+.post-info.twitter { background: url('static/img/social-twitter-30x30.png') bottom right no-repeat; }
 
-/* Infinite Scroll loader */
 #infscr-loading {
 	text-align: center;
 	z-index: 100;
@@ -59,3 +62,5 @@ select#UCFHBHeaderLinks {
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 } 
+
+#footer p { text-align: center; }

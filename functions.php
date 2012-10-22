@@ -102,13 +102,17 @@ function fetch_flickr() {
 function fetch_instagram() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('instagram', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
-		$max 	= is_numeric($theme_options['instagram_max_results']) ? $theme_options['hashtags'] : 20;
+		$max 		= is_numeric($theme_options['instagram_max_results']) ? $theme_options['hashtags'] : 20;
+		$hashtags 	= explode(',', $theme_options['hashtags']);
+		$merged		= array();
+		
+		foreach ($hashtags as $hashtag) {
+			$merged[] .= 'http://instagram.com/tags/'.preg_replace('/[^A-Za-z0-9]/', "", $hashtag).'/feed/recent.rss';
+		}
 		
 		add_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
-		$feed 	= fetch_feed('http://instagram.com/tags/'.preg_replace('/[^A-Za-z0-9]/', "", $theme_options['hashtags']).'/feed/recent.rss');
+		$feed = fetch_feed($merged);
 		remove_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
-		
-		// TODO: Fix feed url to accept more than one tag at a time...
 		
 		if (!is_wp_error($feed)) { 
 			// Figure out how many total items there are, but limit it to the max number set. 

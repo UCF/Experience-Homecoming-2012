@@ -357,6 +357,12 @@ class FeedSubmission extends CustomPostType {
 				'id' => $prefix.'image',
 				'type' => 'text',
 			),
+			array(
+				'name' => 'Original URL',
+				'desc' => 'Link to the submitted content on its service of origin.',
+				'id' => $prefix.'original_link',
+				'type' => 'text',
+			),
 		);
 	}
 }

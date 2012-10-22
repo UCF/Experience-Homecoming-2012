@@ -160,6 +160,7 @@ function fetch_twitter() {
 }
 
 
+
 /**
  * Master feed builder
  * 
@@ -237,6 +238,7 @@ function get_master_feed() {
 					'feedsubmission_image' 				=> $image,
 					'title' 							=> $item->get_title(),
 					'post_content' 						=> $content,
+					'original_link'						=> $item->get_link(0),
 				);
 				// Add the item array to the master array
 				$master_array[] = $item_array;
@@ -246,6 +248,9 @@ function get_master_feed() {
 
 	return $master_array;
 }
+
+
+var_dump(get_master_feed());
 
 
 /**
@@ -266,25 +271,12 @@ function create_feedsubmissions($feed=null) {
 			$clean_title = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)\#@\'\;\:\/%&-]/s', '', $item['title']);
 			$similar_pending	= get_post_by_title_and_status($clean_title, 'OBJECT', 'feedsubmission', 'pending');
 			$similar_published	= get_post_by_title_and_status($clean_title, 'OBJECT', 'feedsubmission', 'published');
-			if ($similar_pending !== NULL) {
+			
+			if ( ($similar_pending !== NULL) && (get_post_meta($similar_pending->ID, 'feedsubmission_original_link', TRUE) == $item['feedsubmission_original_link']) ) {
 				$already_submitted = true;
-				if ( 
-					get_post_meta($similar_pending->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'] &&
-					get_post_meta($similar_pending->ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author'] &&
-					get_post_meta($similar_pending->ID, 'feedsubmission_original_post_time', TRUE) == $item['feedsubmission_original_post_time']
-				) {
-					$already_submitted = true;
-				}
 			}
-			elseif ($similar_published !== NULL) {
+			elseif ( ($similar_published !== NULL) && (get_post_meta($similar_published->ID, 'feedsubmission_original_link', TRUE) == $item['feedsubmission_original_link']) ) {
 				$already_submitted = true;
-				if ( 
-					get_post_meta($similar_published->ID, 'feedsubmission_service', TRUE) == $item['feedsubmission_service'] &&
-					get_post_meta($similar_published>ID, 'feedsubmission_author', TRUE) == $item['feedsubmission_author'] &&
-					get_post_meta($similar_published->ID, 'feedsubmission_original_post_time', TRUE) == $item['feedsubmission_original_post_time']
-				) {
-					$already_submitted = true;
-				}
 			}
 			
 			if ($already_submitted == false && $item['feedsubmission_service'] !== false) {
@@ -305,6 +297,7 @@ function create_feedsubmissions($feed=null) {
 				add_post_meta($post_id, 'feedsubmission_author' , $item['feedsubmission_author' ]);
 				add_post_meta($post_id, 'feedsubmission_original_pub_time', $item['feedsubmission_original_pub_time']);
 				add_post_meta($post_id, 'feedsubmission_image', $item['feedsubmission_image']);
+				add_post_meta($post_id, 'feedsubmission_original_link', $item['feedsubmission_original_link']);
 					
 				$count++;
 			}

@@ -40,6 +40,8 @@ select#UCFHBHeaderLinks {
 
 #home #content-col { overflow: hidden; }
 
+#page-nav, #new-posts { display: block; text-indent: -9999px; }
+
 .box { background-color: #ccc; margin-bottom: 20px; width: 310px; margin-right: 20px; }
 .box-inner { padding: 20px; overflow: hidden; }
 .box-inner .post-info { width: 100%; overflow: hidden; min-height: 30px; line-height: 14px; margin-top: 10px; }

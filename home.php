@@ -1,5 +1,10 @@
 <?php get_header(); ?>
 <?php
+	date_default_timezone_set('America/New_York'); // Make sure we're using the currect timezone
+	$theme_options 			= get_option(THEME_OPTIONS_NAME);
+	$autorefresh_on 		= $theme_options['autorefresh_on'] ? $theme_options['autorefresh_on'] : 1;
+	$autorefresh_interval 	= $theme_options['autorefresh_interval'] ? $theme_options['autorefresh_interval'] : 2;
+
 	// We're manually handing GET params for pagination because WP pagination sucks
 	$paged = is_numeric($_GET['pg']) ? $_GET['pg'] : 1;
 	$args = array( 
@@ -8,9 +13,7 @@
 		'order'			 => 'DESC',
 		'orderby'		 => 'meta_value_num',
 		'meta_key'		 => 'feedsubmission_original_pub_time',
-			
-		'post_status'				 => 'pending' // Delete me after testing!
-			
+		'post_status'	 => 'publish',
 	);
 	$loop = new WP_Query($args);
 	
@@ -20,11 +23,12 @@
 			<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a custom post type loop.</p>
 			<?=get_sidebar();?>
 			<p id="page-nav"><?php print "<a href='".site_url()."/?pg=".($paged+1)."'>Next</a>"; ?></p>
+			<p id="new-posts"><?php print "<a href='".site_url()."/newposts/?from=".date('YmdHis')."'>Get New Posts</a>"; ?></p>
 		</div>
 		<div class="span9" id="content-col">
 			<?php
 				while ( $loop->have_posts() ) : $loop->the_post();
-						
+				
 					$author   = get_post_meta($post->ID, 'feedsubmission_author', TRUE);
 					$pub_date = date('F j Y, g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
 					$service  = get_post_meta($post->ID, 'feedsubmission_service', TRUE);
@@ -46,7 +50,7 @@
 							break;
 					}
 				?>
-					<div class="box">
+					<div class="box" id="<?=$service?>-<?=str_replace(' ', '', get_post_meta($post->ID, 'feedsubmission_author', TRUE))?>-<?=get_post_meta($post->ID, 'feedsubmission_original_pub_time', true)?>">
 						<div class="box-inner">
 							<h3><?=the_title();?></h3>
 							<?php
@@ -69,6 +73,7 @@
 	</div>
 	
 	<script>
+		// Masonry Init
 		$(function(){
 			var $container = $('#content-col');
 		
@@ -83,6 +88,35 @@
 			});
 		});
 		
+		// Handle refreshes
+		var getNewPosts = function() {
+			$.ajax({
+				url: $('#new-posts a').attr('href'),
+				success: function(data){
+					// On success, prepend the data found
+					var newPostsURL = $('#new-posts a').attr('href');
+					var data = $(data),
+						boxes = data.find('div.box');
+					$container.prepend( boxes ).masonry( 'reload' );
+					
+					// Update newPostsURL with correct time interval after refresh
+					var fromInt = newPostsURL.split('from='),
+						fromInt = parseInt(fromInt[1]);
+					
+					var fromTime = fromInt + (<?=$autorefresh_interval?> * 100); //  *100 for adding to Minute value
+					$('#new-posts a').attr('href', '<?=site_url()?>/newposts/?from=' + fromTime);
+			   }
+			});
+		}
+		
+		<?php if ($autorefresh_on == 1) { ?>
+		// If Autorefreshing is turned on, set an interval for running getNewPosts()		
+		var interval = 1000 * 60 * <?=$autorefresh_interval?>;
+		setInterval(getNewPosts, interval);
+		<?php } ?>
+		
+		
+		// Handle Infinite Scrolling
 		$container.infinitescroll({
 			navSelector  : '#page-nav',    // selector for the paged navigation 
 			nextSelector : '#page-nav a',  // selector for the NEXT link (to page 2)

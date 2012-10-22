@@ -180,6 +180,24 @@ Config::$theme_settings = array(
 			'default'     => 20,
 			'value'       => $theme_options['twitter_max_results'],
 		)),
+		new RadioField(array(
+			'name'        => 'Enable Autorefresh',
+			'id'          => THEME_OPTIONS_NAME.'[autorefresh_on]',
+			'description' => 'If turned off, the front page will not automatically refresh to check for new posts.',
+			'default'     => 1,
+			'choices'     => array(
+				'On'  => 1,
+				'Off' => 0,
+			),
+			'value'       => $theme_options['autorefresh_on'],
+		)),
+		new TextField(array(
+			'name'        => 'Autorefresh Interval',
+			'id'          => THEME_OPTIONS_NAME.'[autorefresh_interval]',
+			'description' => 'Number of minutes to wait until autorefreshing the front page (Enable Autorefresh should be turned on.)',
+			'default'     => 2,
+			'value'       => $theme_options['autorefresh_interval'],
+		)),
 	),
 	'Styles' => array(
 		new RadioField(array(

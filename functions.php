@@ -149,7 +149,6 @@ function fetch_twitter() {
 }
 
 
-
 /**
  * Master feed builder
  * 

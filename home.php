@@ -114,7 +114,7 @@
 		
 		// Handle Admin updating
 		<?php if (is_user_logged_in() && current_user_can('edit_post')) { ?>
-		$('.edit-approve').click(function(e) {
+		$('.edit-approve').live('click', function(e) {
 			e.preventDefault();
 			var button = $(this);
 			$.ajax({
@@ -126,7 +126,7 @@
 				button.parents('.box').animate({ opacity: 0.45, }, 1000);	
 			});
 		});
-		$('.edit-delete').click(function(e) {
+		$('.edit-delete').live('click', function(e) {
 			e.preventDefault();
 			var button = $(this);
 			$.ajax({

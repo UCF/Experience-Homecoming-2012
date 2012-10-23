@@ -379,6 +379,37 @@ function display_feedsubmission($post) {
 				<small>via <?=$author?> <span class="<?=$service?>">on <?=ucfirst($service)?></span><br/>
 				<span class="pubtime">at <?=$pub_date?></span></small>
 			</p>
+			<?php
+				// If the user is logged in and has editing capabilities, display editing options 
+				if (is_user_logged_in() && current_user_can('edit_post')) { ?>
+				<div class="edit-options">
+					<p class="post-status"><strong>Post status:</strong>
+						<?php 
+						switch ($post->post_status) {
+							case 'publish':
+								print '<span class="label label-success">Published</span>';
+								break;
+							default:
+								print '<span class="label">'.ucfirst($post->post_status).'</span>';
+								break;
+						}
+						?>
+					</p>
+					<div class="btn-group">
+						<?php if ($post->post_status !== 'publish') { ?>
+						<button class="btn btn-small edit-approve" value="<?=$post->ID?>"
+							data-approve-url="<?=site_url()?>/admin-publish/?id=<?=$post->ID?>">
+							<i class="icon-ok"></i> Approve
+						</button>
+						<?php } ?>
+						<button class="btn btn-small edit-delete" value="<?=$post->ID?>" 
+							data-trash-url="<?=site_url()?>/admin-delete/?id=<?=$post->ID?>">
+							<i class="icon-trash"></i> Trash
+						</button>
+					</div>
+					<a class="btn btn-small editlink" target="_blank" href="<?=get_edit_post_link($post->ID)?>"><i class="icon-edit"></i> Edit Post</a>
+				</div>
+			<?php } ?>
 		</div>
 	</div>
 	

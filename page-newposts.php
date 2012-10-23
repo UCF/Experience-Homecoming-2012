@@ -16,6 +16,10 @@
 		//'meta_key'		 => 'feedsubmission_original_pub_time',
 		'post_status'	 => 'publish',
 	);
+	// Logged-in users should get pending and published posts
+	if (is_user_logged_in() && current_user_can('edit_post')) {
+		$args['post_status'] = array('publish', 'pending');
+	}
 	
 	// Retrieve posts within the given time span.
 	// Note that we must check by post_modified, NOT post_date, as these must be approved

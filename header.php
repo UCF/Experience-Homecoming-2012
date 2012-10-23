@@ -43,5 +43,14 @@
 				<div class="span12">
 					<h1><a href="<?=bloginfo('url')?>"><?=bloginfo('name')?></a></h1>
 					<h2>Something else can go here...</h2>
+					<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a custom post type loop.</p>
+					<?=wp_nav_menu(array(
+						'theme_location' => 'main-menu', 
+						'container' => 'false', 
+						'menu_class' => 'menu '.get_header_styles(), 
+						'menu_id' => 'header-menu', 
+						'walker' => new Bootstrap_Walker_Nav_Menu()
+						));
+					?>
 				</div>
 			</div>

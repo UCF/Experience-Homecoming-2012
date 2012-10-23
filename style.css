@@ -38,7 +38,11 @@ select#UCFHBHeaderLinks {
 
 /* Site Styles */
 
-#home #content-col { overflow: hidden; }
+#UCFHBHeader { position: fixed; top: 0; width: 100%; z-index: 999; }
+#UCFHBWrapper { }
+#header { position: fixed; top: 38px; height: 200px; background: #ddd; z-index: 999; overflow: hidden; margin-left: -20px; }
+
+#home #content-col { overflow: hidden; margin-top: 250px; }
 
 #page-nav, #new-posts { display: block; text-indent: -9999px; }
 
@@ -50,6 +54,10 @@ select#UCFHBHeaderLinks {
 .post-info.twitter { background: url('static/img/social-twitter-30x30.png') bottom right no-repeat; }
 .post-info.selfpost { background: url('static/img/social-ucf-30x30.png') bottom right no-repeat; }
 .post-info.selfpost span.selfpost { display: none; }
+
+.box-inner .edit-options { margin-top: 15px; padding-top: 10px; border-top: 1px solid #999; }
+.box-inner .edit-options .btn-group { float: left; } 
+.box-inner .edit-options a.editlink { float: right; }
 
 #infscr-loading {
 	text-align: center;

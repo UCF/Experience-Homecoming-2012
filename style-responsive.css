@@ -3,16 +3,7 @@
 	#UCFHBHeader div.UCFHBWrapper { width: 100%; }
 }
 
-@media (max-width: 767px) {
-	#header { margin-left: 0; }
-	
-	#home .description { margin-top: 10px; }
-	
-	#below-the-fold { margin-left: 0; }
-	#below-the-fold .span4 { width: 100%; margin-left: 0; margin-bottom: 20px; }
-	
-	.news .item { margin-bottom: 10px; }
-	
+@media (max-width: 767px) {		
 	/* Shrinkable bootstrap tables for tablets/phones.
 	Responsive table guide via css-tricks.com/responsive-data-tables/ */
 	table.table.table-striped, 
@@ -69,6 +60,9 @@
 }
 
 @media (max-width: 480px) {
+	
+	#UCFHBHeader, #header { position: relative; }
+	
 	.navbar .menu {
 		padding: 0;
 	}

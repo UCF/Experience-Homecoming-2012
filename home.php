@@ -16,24 +16,25 @@
 		//'meta_key'		 => 'feedsubmission_original_pub_time',
 		'post_status'	 => 'publish',
 	);
+	// Logged-in users should get pending and published posts
+	if (is_user_logged_in() && current_user_can('edit_post')) {
+		$args['post_status'] = array('publish', 'pending');
+	}
 	$loop = new WP_Query($args);
 	
 ?>
 	<div class="row-fluid page-content" id="home">
-		<div class="span3" id="sidebar">
-			<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a custom post type loop.</p>
-			<?=get_sidebar();?>
-			<p id="page-nav"><?php print "<a href='".site_url()."/?pg=".($paged+1)."'>Next</a>"; ?></p>
-			<p id="new-posts"><?php print "<a href='".site_url()."/newposts/?from=".date('YmdHis')."'>Get New Posts</a>"; ?></p>
-		</div>
-		<div class="span9" id="content-col">
+		<div class="span12" id="content-col">
 			<?php
 				while ( $loop->have_posts() ) : $loop->the_post();
 					print display_feedsubmission($post);
 				endwhile;
 			?>
-				
+		
+			<p id="page-nav"><?php print "<a href='".site_url()."/?pg=".($paged+1)."'>Next</a>"; ?></p>
+			<p id="new-posts"><?php print "<a href='".site_url()."/newposts/?from=".date('YmdHis')."'>Get New Posts</a>"; ?></p>	
 		</div>
+		
 	</div>
 	
 	<script>
@@ -109,6 +110,35 @@
 			
 			$('#page-nav a').attr('href', pgurl + '?pg=' + pgval);
 		});
+		
+		
+		// Handle Admin updating
+		<?php if (is_user_logged_in() && current_user_can('edit_post')) { ?>
+		$('.edit-approve').click(function(e) {
+			e.preventDefault();
+			var button = $(this);
+			$.ajax({
+				url: button.attr('data-approve-url'),
+				cache: false
+			}).done(function() {
+				button.addClass('btn-success').parents('.btn-group').next('a.editlink').addClass('disabled').click(function(e) { e.preventDefault(); });;
+				button.next('.edit-delete').andSelf().attr('disabled', 'disabled');
+				button.parents('.box').animate({ opacity: 0.45, }, 1000);	
+			});
+		});
+		$('.edit-delete').click(function(e) {
+			e.preventDefault();
+			var button = $(this);
+			$.ajax({
+				url: button.attr('data-trash-url'),
+				cache: false
+			}).done(function() {
+				button.addClass('btn-danger').parents('.btn-group').next('a.editlink').addClass('disabled').click(function(e) { e.preventDefault(); });;
+				button.prev('.edit-approve').andSelf().attr('disabled', 'disabled');
+				button.parents('.box').animate({ opacity: 0.45, }, 1000);	
+			});
+		});
+		<?php } ?>
 	});
 	</script>
 		

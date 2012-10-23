@@ -48,6 +48,8 @@ select#UCFHBHeaderLinks {
 .post-info.flickr { background: url('static/img/social-flickr-30x30.png') bottom right no-repeat; }
 .post-info.instagram { background: url('static/img/social-instagram-30x30.png') bottom right no-repeat; }
 .post-info.twitter { background: url('static/img/social-twitter-30x30.png') bottom right no-repeat; }
+.post-info.selfpost { background: url('static/img/social-ucf-30x30.png') bottom right no-repeat; }
+.post-info.selfpost span.selfpost { display: none; }
 
 #infscr-loading {
 	text-align: center;

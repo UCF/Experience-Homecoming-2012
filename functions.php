@@ -42,7 +42,14 @@ function manage_feedsubmission_columns( $column, $post_id ) {
 			print ucfirst(get_post_meta( $post->ID, 'feedsubmission_service', true ));
 			break;
 		case 'orig_pub_time':
-			print date('Y/m/d @ g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
+			switch (get_post_meta($post->ID, 'feedsubmission_service', true)) {
+				case 'selfpost':
+					print date('Y/m/d @ g:i a', strtotime($post->post_date.' - 4 hours'));
+					break;
+				default:
+					print date('Y/m/d @ g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
+					break;
+			}
 			break;
 		case 'post_status':
 			switch ($post->post_status) {
@@ -345,7 +352,7 @@ function display_feedsubmission($post) {
 		case 'selfpost':
 			// If this is a self post, force UCF as the author and the last modified date as the pub date
 			$author = 'UCF';
-			$pub_date = $post->post_modified;
+			$pub_date = date('F j Y, g:i a', strtotime($post->post_modified.' - 4 hours'));
 		default:
 			break;
 	}

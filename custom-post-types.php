@@ -315,7 +315,7 @@ class FeedSubmission extends CustomPostType {
 		$new_item       = 'New Feed Post',
 		$public         = True,
 		$use_editor     = True,
-		$use_thumbnails = False,
+		$use_thumbnails = True,
 		$use_order      = False,
 		$use_title      = True,
 		$use_metabox    = True,
@@ -329,6 +329,7 @@ class FeedSubmission extends CustomPostType {
 		foreach ($theme_options['enabled_services'] as $key => $val) {
 			$options_array[ucwords($val)] .= $val;
 		}
+		$options_array['Self Post (not from a feed)'] .= 'selfpost';
 		
 		return array(
 			array(
@@ -343,7 +344,6 @@ class FeedSubmission extends CustomPostType {
 				'desc' => 'The user that submitted the content.',
 				'id' => $prefix.'author',
 				'type' => 'text',
-				'std' => 'Anonymous',
 			),
 			array(
 				'name' => 'Original Publish Date/Time',
@@ -361,6 +361,12 @@ class FeedSubmission extends CustomPostType {
 				'name' => 'Original URL',
 				'desc' => 'Link to the submitted content on its service of origin.',
 				'id' => $prefix.'original_link',
+				'type' => 'text',
+			),
+			array(
+				'name' => 'Post Links To',
+				'desc' => 'If provided, the Feed Submission will link to the URL given below.',
+				'id' => $prefix.'links_to',
 				'type' => 'text',
 			),
 		);

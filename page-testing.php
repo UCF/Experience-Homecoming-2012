@@ -5,7 +5,6 @@
 
 <div style="margin-top: 100px;">
 
-<?=var_dump(fetch_twitter())?>
 
 </div>
 <?php get_footer(); ?>

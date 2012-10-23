@@ -57,7 +57,7 @@
 							break;
 					}
 				?>
-					<div class="box" id="<?=$service?>-<?=str_replace(' ', '', get_post_meta($post->ID, 'feedsubmission_author', TRUE))?>-<?=get_post_meta($post->ID, 'feedsubmission_original_pub_time', true)?>">
+					<div class="box" id="<?=$service?>-<?=$post->ID?>">
 						<div class="box-inner">
 							<h3><?=the_title();?></h3>
 							<?php

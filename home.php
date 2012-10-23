@@ -11,7 +11,8 @@
 		'post_type' 	 => 'feedsubmission',
 		'paged'			 => $paged,
 		'order'			 => 'DESC',
-		'orderby'		 => 'meta_value_num',
+		//'orderby'		 => 'meta_value_num',
+		'orderby'		 => 'post_modified',
 		'meta_key'		 => 'feedsubmission_original_pub_time',
 		'post_status'	 => 'publish',
 	);
@@ -28,44 +29,7 @@
 		<div class="span9" id="content-col">
 			<?php
 				while ( $loop->have_posts() ) : $loop->the_post();
-				
-					$author   = get_post_meta($post->ID, 'feedsubmission_author', TRUE);
-					$pub_date = date('F j Y, g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
-					$service  = get_post_meta($post->ID, 'feedsubmission_service', TRUE);
-					
-					switch ($service) {
-						case 'flickr':
-							// Search the first part of the post content for the "user has uploaded a photo:" line
-							$content_expl = explode('posted a photo:', get_the_content());
-							$user_link = explode('<p>', $content_expl[0]);
-							$author = $user_link[1];
-							break;
-						case 'instagram':
-							// Instagram has no online profile views
-							break;
-						case 'twitter':
-							$author = '<a href="http://www.twitter.com/'.$author.'">@'.$author.'</a>';
-							break;
-						default:
-							break;
-					}
-				?>
-					<div class="box" id="<?=$service?>-<?=$post->ID?>">
-						<div class="box-inner">
-							<h3><?=the_title();?></h3>
-							<?php
-								// Twitter submission titles and content are the same, so only display it once
-								if ($service !== 'twitter') {
-									the_content();
-								}
-							?>
-							<p class="post-info <?=$service?>">
-								<small>via <?=$author?> <span class="<?=$service?>">on <?=ucfirst($service)?></span><br/>
-								<span class="pubtime">at <?=$pub_date?></span></small>
-							</p>
-						</div>
-					</div>
-				<?php
+					print display_feedsubmission($post);
 				endwhile;
 			?>
 				

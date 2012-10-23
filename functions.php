@@ -30,6 +30,11 @@ function manage_feedsubmission_columns( $column, $post_id ) {
 		case 'image':
 			if (get_post_meta( $post->ID, 'feedsubmission_image', true )) {
 				print '<a href="'.get_post_meta( $post->ID, 'feedsubmission_image', true ).'"><img src="'.get_post_meta( $post->ID, 'feedsubmission_image', true ).'" style="max-height: 100px;" /></a>';
+				break;
+			}
+			elseif (get_the_post_thumbnail($post->ID)) {
+				print get_the_post_thumbnail($post->ID, array(100,100));
+				break;
 			}
 			else { print '(No image)'; }
 			break;
@@ -310,6 +315,68 @@ function create_feedsubmissions($feed=null) {
 		}
 		return $count.' new Feed Submission pending posts created at '.date('Y-m-d H:i:s');
 	}
+}
+
+
+
+/**
+ * Display FeedSubmission content on the front-end.
+ * Intended for use within The Loop.
+ *
+ **/
+function display_feedsubmission($post) {
+	$author   = get_post_meta($post->ID, 'feedsubmission_author', TRUE) ? get_post_meta($post->ID, 'feedsubmission_author', TRUE) : 'Anonymous';
+	$pub_date = date('F j Y, g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
+	$service  = get_post_meta($post->ID, 'feedsubmission_service', TRUE);
+					
+	switch ($service) {
+		case 'flickr':
+			// Search the first part of the post content for the "user has uploaded a photo:" line
+			$content_expl = explode('posted a photo:', get_the_content());
+			$user_link = explode('<p>', $content_expl[0]);
+			$author = $user_link[1];
+			break;
+		case 'instagram':
+			// Instagram has no online profile views
+			break;
+		case 'twitter':
+			$author = '<a href="http://www.twitter.com/'.$author.'">@'.$author.'</a>';
+			break;
+		case 'selfpost':
+			// If this is a self post, force UCF as the author and the last modified date as the pub date
+			$author = 'UCF';
+			$pub_date = $post->post_modified;
+		default:
+			break;
+	}
+	
+	ob_start();
+	?>
+	
+	<div class="box" id="<?=$service?>-<?=$post->ID?>">
+		<div class="box-inner">
+			<h3><?=the_title();?></h3>
+			<?php
+				// Self posts should display a featured image, if one is available
+				if ($service == 'selfpost') {
+					if (get_the_post_thumbnail($post->ID)) {
+						print get_the_post_thumbnail($post->ID);
+					}
+				}
+				// Twitter submission titles and content are the same, so only display it once
+				if ($service !== 'twitter') {
+					the_content();
+				}
+			?>
+			<p class="post-info <?=$service?>">
+				<small>via <?=$author?> <span class="<?=$service?>">on <?=ucfirst($service)?></span><br/>
+				<span class="pubtime">at <?=$pub_date?></span></small>
+			</p>
+		</div>
+	</div>
+	
+	<?php
+	return ob_get_clean();
 }
 
 ?>

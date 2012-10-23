@@ -19,6 +19,7 @@ function edit_feedsubmission_columns() {
 		'image' 		=> 'Image',
 		'service'		=> 'Service',
 		'orig_pub_time' => 'Original Submission Date',
+		'post_status'	=> 'Post Status',
 	);
 	return $columns;
 }
@@ -33,11 +34,20 @@ function manage_feedsubmission_columns( $column, $post_id ) {
 			else { print '(No image)'; }
 			break;
 		case 'service':
-			print get_post_meta( $post->ID, 'feedsubmission_service', true );
+			print ucfirst(get_post_meta( $post->ID, 'feedsubmission_service', true ));
 			break;
 		case 'orig_pub_time':
 			print date('Y/m/d @ g:i a', strtotime(get_post_meta( $post->ID, 'feedsubmission_original_pub_time', true )));
 			break;
+		case 'post_status':
+			switch ($post->post_status) {
+				case 'publish':
+					print '<span style="font-weight:bold; color:green;">Published</span><br/>(Last Modified '.date('Y/m/d @ g:i a', strtotime($post->post_modified.' -4 hours')).')';
+					break;
+				default:
+					print ucfirst($post->post_status);
+					break;
+			}
 		default:
 			break;
 	}

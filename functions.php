@@ -152,10 +152,16 @@ function fetch_twitter() {
 	$theme_options = get_option(THEME_OPTIONS_NAME);
 	if ( (in_array('twitter', $theme_options['enabled_services'])) && ($theme_options['hashtags']) ) {
 		$max 	= is_numeric($theme_options['twitter_max_results']) ? $theme_options['hashtags'] : 20;
+		$hashtags 	= explode(',', $theme_options['hashtags']);
+		$merged		= array();
 		
-		// NOTE: Twitter RSS will be completely deprecated by March 2013; this is only a temporary solution!
+		foreach ($hashtags as $hashtag) {
+			// NOTE: Twitter RSS will be completely deprecated by March 2013; this is only a temporary solution!
+			$merged[] .= 'http://search.twitter.com/search.rss?q='.urlencode($hashtag);
+		}
+		
 		add_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
-		$feed 	= fetch_feed('http://search.twitter.com/search.rss?'.build_hashtag_query('q'));
+		$feed 	= fetch_feed($merged);
 		remove_filter( 'wp_feed_cache_transient_lifetime' , 'cache_reset' );
 		
 		if (!is_wp_error($feed)) { 

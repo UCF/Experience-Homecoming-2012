@@ -26,6 +26,26 @@
 <div class="container-fluid">
 	<div class="row-fluid page-content" id="home">
 		<div class="span12" id="content-col">
+			<?php 
+				if (is_user_logged_in() && current_user_can('edit_post')) {
+					global $current_user;
+					get_currentuserinfo(); 
+			?>
+			<div class="modal fade" id="adminmodal">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>Hello, <?=$current_user->display_name?>!</h3>
+				</div>
+				<div class="modal-body">
+					<p>When approving posts from the home page, please remember to <strong>scroll down</strong> until you reach the last <span class="label label-success">published</span> post, and work your way up. This way, published posts will display in the correct order.</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal">Close</a>
+				</div>
+			</div>
+			<?php
+				}
+			?>
 			<?php
 				while ( $loop->have_posts() ) : $loop->the_post();
 					print display_feedsubmission($post);
@@ -38,7 +58,7 @@
 		
 	</div>
 	
-	<script>
+	<script type="text/javascript">
 		// Masonry Init
 		$(function(){
 			var $container = $('#content-col');
@@ -139,6 +159,7 @@
 				button.parents('.box').animate({ opacity: 0.45, }, 1000);	
 			});
 		});
+		$('#adminmodal').modal();
 		<?php } ?>
 	});
 	</script>

@@ -38,16 +38,78 @@ select#UCFHBHeaderLinks {
 
 /* Site Styles */
 
+@font-face {
+    font-family: 'LeagueGothicRegular';
+    src: url('static/fonts/League_Gothic-webfont.eot');
+    src: url('static/fonts/League_Gothic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('static/fonts/League_Gothic-webfont.woff') format('woff'),
+         url('static/fonts/League_Gothic-webfont.ttf') format('truetype'),
+         url('static/fonts/League_Gothic-webfont.svg#LeagueGothicRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 #UCFHBHeader { position: fixed; top: 0; width: 100%; z-index: 999; }
 #UCFHBWrapper { }
-#header { position: fixed; top: 38px; height: 200px; background: #ddd; z-index: 999; overflow: hidden; margin-left: -20px; }
+
+#header { 
+	position: fixed; 
+	top: 38px; 
+	height: 200px; 
+	background: #9f9e9e url('static/img/stripe-bg.png') repeat;
+	z-index: 999; 
+	overflow: hidden; 
+	margin-left: -20px; 
+	-webkit-box-shadow:  0px 2px 3px 1px rgba(0, 0, 0, 0.2);
+    box-shadow:  0px 2px 3px 1px rgba(0, 0, 0, 0.2);
+}
+h1 { 
+	width: 462px; 
+	height: 145px;
+	display: block; 
+	text-indent: -9999px; 
+	background: url('static/img/header-logo.png') center center no-repeat;
+	float: left;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+h3 { line-height: 25px; margin-bottom: 10px; }
+h4 { 
+	font-family: 'LeagueGothicRegular', sans-serif; 
+	font-size: 20px; 
+	color: #fef2c7; 
+	font-weight: normal; 
+	text-transform: uppercase; 
+	letter-spacing: 1px; 
+	line-height: 30px;
+	margin-bottom: 10px;
+}
+
+#header-info { float: left; margin-left: 20px; margin-top: 50px; }
+
+#header-taglist, #header-servicelist { margin-bottom: 2px; }
+#header-taglist .taglist-hash, 
+#header-servicelist .servicelist-service,
+span.comma { font-family: 'LeagueGothicRegular', sans-serif; font-size: 28px; color: #000; letter-spacing: 1px; }
+#header-taglist .taglist-tag { font-family: 'LeagueGothicRegular', sans-serif; font-size: 28px; color: #ffc90a; text-transform: uppercase; letter-spacing: 1px; }
+#header-servicelist .servicelist-service { font-size: 20px; }
+.comma:last-child { display: none; }
 
 #home #content-col { overflow: hidden; margin-top: 250px; }
 
 #page-nav, #new-posts { display: block; text-indent: -9999px; }
 
-.box { background-color: #ccc; margin-bottom: 20px; width: 310px; margin-right: 20px; }
+.box { 
+	background-color: #fef2c7; 
+	border: 1px solid #eddda2; 
+	margin-bottom: 20px; 
+	width: 272px; 
+	margin-right: 20px; 
+	-webkit-box-shadow:  2px 2px 3px 1px rgba(0, 0, 0, 0.2);
+    box-shadow:  2px 2px 3px 1px rgba(0, 0, 0, 0.2);
+}
 .box-inner { padding: 20px; overflow: hidden; }
+.box-inner small { color: #A29A7F; }
 .box-inner .post-info { width: 100%; overflow: hidden; min-height: 30px; line-height: 14px; margin-top: 10px; }
 .post-info.flickr { background: url('static/img/social-flickr-30x30.png') bottom right no-repeat; }
 .post-info.instagram { background: url('static/img/social-instagram-30x30.png') bottom right no-repeat; }
@@ -55,7 +117,7 @@ select#UCFHBHeaderLinks {
 .post-info.selfpost { background: url('static/img/social-ucf-30x30.png') bottom right no-repeat; }
 .post-info.selfpost span.selfpost { display: none; }
 
-.box-inner .edit-options { margin-top: 15px; padding-top: 10px; border-top: 1px solid #999; }
+.box-inner .edit-options { margin-top: 15px; padding-top: 10px; border-top: 1px solid #A29A7F; }
 .box-inner .edit-options .btn-group { float: left; } 
 .box-inner .edit-options a.editlink { float: right; }
 

@@ -38,19 +38,33 @@
 	<!--[if IE 8 ]>     <body class="ie ie8 <?=body_classes()?>"> <![endif]-->
 	<!--[if IE 9 ]>     <body class="ie ie9 <?=body_classes()?>"> <![endif]-->
 	<!--[if (gt IE 9)|!(IE)]><!--> <body class="<?=body_classes()?>"> <!--<![endif]-->
+	<?php $theme_options = get_option(THEME_OPTIONS_NAME); ?>
 		<div class="container-fluid">
 			<div class="row-fluid" id="header">
-				<div class="span12">
-					<h1><a href="<?=bloginfo('url')?>"><?=bloginfo('name')?></a></h1>
-					<h2>Something else can go here...</h2>
-					<p>This is a basic demonstration of Masonry.js and InfiniteScroll.js with a custom post type loop.</p>
-					<?=wp_nav_menu(array(
-						'theme_location' => 'main-menu', 
-						'container' => 'false', 
-						'menu_class' => 'menu '.get_header_styles(), 
-						'menu_id' => 'header-menu', 
-						'walker' => new Bootstrap_Walker_Nav_Menu()
-						));
-					?>
+				<a href="<?=bloginfo('url')?>"><h1><?=bloginfo('name')?></h1></a>
+				<div id="header-info">
+					<h4>Join the Crowd:</h4>
+					<p id="header-taglist">
+						<?php 
+							if ($theme_options['hashtags']) {
+								$hashtags = explode(',', $theme_options['hashtags']);
+								foreach ($hashtags as $hashtag) {
+									$hashtag = explode('#', $hashtag);
+									print '<span class="taglist-hash">#</span><span class="taglist-tag">'.$hashtag[1].'</span><span class="comma">, </span>';
+								}
+							}
+						?>
+					</p>
+					<p id="header-servicelist">
+						<?php
+							if ($theme_options['enabled_services']) {
+								$services = $theme_options['enabled_services'];
+								foreach ($services as $service) {
+									print '<span class="servicelist-service">'.ucfirst($service).'</span><span class="comma">, </span>';
+								}
+							}
+						?>
+					</p>
 				</div>
 			</div>
+		</div>

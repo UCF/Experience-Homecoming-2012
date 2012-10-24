@@ -1,4 +1,6 @@
 		</div>
+	</div>
+	<div class="container-fluid">
 		<div class="row-fluid">	
 			<div class="span12" id="footer">
 				<p><small>All Instagram&trade; logos and trademarks displayed on this website are property of Instagram, Inc.</small></p>

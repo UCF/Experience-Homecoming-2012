@@ -3,7 +3,43 @@
 	#UCFHBHeader div.UCFHBWrapper { width: 100%; }
 }
 
-@media (max-width: 767px) {		
+@media (width: 768px) {
+	
+	#home #content-col { margin-top: 260px; }
+	
+	.box { width: 342px; }
+	
+	#infscr-loading {
+		left: 38%;
+		bottom: 20px;
+		width: 150px;
+		padding: 10px;
+	} 
+}
+
+@media (max-width: 767px) {			
+	h1 { width: 150px; height: 46px; background-size: cover; margin-left: 7px; margin-top: 10px; }
+	h4 { display: none; }
+	
+	#header { height: 70px; }
+	#header-info { margin-top: 15px; margin-left: 10px; }
+	
+	#header-taglist .taglist-hash, 
+	#header-taglist .taglist-tag,
+	#header-servicelist .servicelist-service,
+	span.comma { font-size: 16px; }
+	#header-servicelist .servicelist-service { font-size: 12px; }
+
+	#home #content-col { margin-top: 130px; }
+
+	#infscr-loading {
+		left: 34%;
+		bottom: 20px;
+		width: 150px;
+		padding: 10px;
+	} 
+	
+
 	/* Shrinkable bootstrap tables for tablets/phones.
 	Responsive table guide via css-tricks.com/responsive-data-tables/ */
 	table.table.table-striped, 
@@ -61,40 +97,14 @@
 
 @media (max-width: 480px) {
 	
-	#UCFHBHeader, #header { position: relative; }
+	/*#UCFHBHeader, #header { position: relative; }*/
 	
-	.navbar .menu {
-		padding: 0;
-	}
-	.navbar ul#header-menu li:after {
-		content: "";
-	}
-	.navbar ul#header-menu li, .navbar ul#header-menu ul.dropdown-menu li {
-		display: block;
-		float: none;
-		margin: 0;
-		line-height: 13px;
-	}
-	.navbar ul#header-menu li a {
-		display: block;
-		color: #999;
-		font-weight: bold;
-		font-size: 13px;
-		padding: 6px 15px;
-		border-radius: 3px 3px 3px 3px;
-	}
-		.navbar ul#header-menu li.active a {
-			color: #fff;
-			background-color: #222;
-		}
-	.navbar ul#header-menu li a:hover {
-		background-color: #222;
-		text-decoration: none;
-		color: #fff;
-	}
-	.navbar ul#header-menu b.caret {
-		border-bottom-color: #fff;
-    	border-top-color: #fff;
-		margin-top: 4px;
-	}
+	#header { width: 100%; padding-right: 40px; }	
+	
+	#infscr-loading {
+		left: 23%;
+		bottom: 20px;
+		width: 150px;
+		padding: 10px;
+	} 
 }

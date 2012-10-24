@@ -36,6 +36,9 @@
 	$loop = new WP_Query($args);
 	
 ?>
+<div class="container-fluid">
+	<div class="row-fluid page-content" id="home">
+		<div class="span12" id="content-col">
 			<?php
 				if ($from !== '') {
 					while ( $loop->have_posts() ) : $loop->the_post();							
@@ -45,7 +48,8 @@
 					endwhile;
 				}
 			?>
-
+		</div>
+		
 <?php //remove_filter( 'posts_where' , 'filter_where' ); ?>				
 		
 <?php get_footer();?>

@@ -95,7 +95,7 @@ span.comma { font-family: 'LeagueGothicRegular', sans-serif; font-size: 28px; co
 #header-servicelist .servicelist-service { font-size: 20px; }
 .comma:last-child { display: none; }
 
-#home #content-col { overflow: hidden; margin-top: 250px; }
+#home #content-col { overflow: hidden; margin-top: 260px; }
 
 #page-nav, #new-posts { display: block; text-indent: -9999px; }
 

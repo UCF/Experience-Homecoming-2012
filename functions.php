@@ -404,12 +404,12 @@ function display_feedsubmission($post) {
 					<div class="btn-group">
 						<?php if ($post->post_status !== 'publish') { ?>
 						<button class="btn btn-small edit-approve" value="<?=$post->ID?>"
-							data-approve-url="<?=site_url()?>/admin-publish/?id=<?=$post->ID?>">
+							data-approve-url="<?=site_url()?>/admin-update-status/?id=<?=$post->ID?>&status=p">
 							<i class="icon-ok"></i> Approve
 						</button>
 						<?php } ?>
 						<button class="btn btn-small edit-delete" value="<?=$post->ID?>" 
-							data-trash-url="<?=site_url()?>/admin-delete/?id=<?=$post->ID?>">
+							data-trash-url="<?=site_url()?>/admin-update-status/?id=<?=$post->ID?>&status=t">
 							<i class="icon-trash"></i> Trash
 						</button>
 					</div>

@@ -372,8 +372,14 @@ function display_feedsubmission($post) {
 			<?php
 				// Self posts should display a featured image, if one is available
 				if ($service == 'selfpost') {
+					if (get_post_meta($post->ID, 'feedsubmission_links_to', true)) {
+						print '<a target="_blank" href="'.get_post_meta($post->ID, 'feedsubmission_links_to', true).'">';
+					}
 					if (get_the_post_thumbnail($post->ID)) {
 						print get_the_post_thumbnail($post->ID);
+					}
+					if (get_post_meta($post->ID, 'feedsubmission_links_to', true)) {
+						print '</a>';
 					}
 				}
 				// Twitter submission titles and content are the same, so only display it once

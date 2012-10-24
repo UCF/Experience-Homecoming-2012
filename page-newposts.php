@@ -37,11 +37,13 @@
 	
 ?>
 			<?php
-				while ( $loop->have_posts() ) : $loop->the_post();							
-					if ($post->post_modified > $fromtime) {				
-						print display_feedsubmission($post);
-					}
-				endwhile;
+				if ($from !== '') {
+					while ( $loop->have_posts() ) : $loop->the_post();							
+						if ($post->post_modified > $fromtime) {				
+							print display_feedsubmission($post);
+						}
+					endwhile;
+				}
 			?>
 
 <?php //remove_filter( 'posts_where' , 'filter_where' ); ?>				

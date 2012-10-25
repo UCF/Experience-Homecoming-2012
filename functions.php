@@ -350,7 +350,7 @@ function add_interval_fiveminutes($schedules) {
 add_action('run_create_feedsubmissions', 'create_feedsubmissions');
 function activate_create_feedsubmissions() {
 	if ( !wp_next_scheduled( 'run_create_feedsubmissions' ) ) {
-		wp_schedule_event( time(), 'minutes_5', 'run_create_feedsubmissions');
+		wp_schedule_event(time(), 'minutes_5', 'run_create_feedsubmissions');
 	}
 }
 add_action('wp', 'activate_create_feedsubmissions');

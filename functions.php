@@ -268,12 +268,11 @@ function get_master_feed() {
 
 /**
  * Creates new FeedSubmission post drafts given an array of data.
- * Intended to be called in a separate file, run by a cron job with
- * a set time interval.
+ * Intended to be called by a cron job with a set time interval.
  * 
  **/
-function create_feedsubmissions($feed=null) {
-	if (!$feed) { return 'No feed specified.'; }
+function create_feedsubmissions() {
+	$feed = get_master_feed();
 	if (empty($feed)) { return 'Feed returned no content.'; }
 	
 	elseif (!empty($feed)) {
@@ -330,6 +329,31 @@ function create_feedsubmissions($feed=null) {
 	}
 }
 
+
+/**
+ * Set up a scheduler using WP-Cron for retrieving new posts.
+ * Remove the functions below to disable automated feed submission generation.
+ *
+ **/
+
+// Add 5-minute interval to wp schedules
+add_filter('cron_schedules', 'add_interval_fiveminutes');
+function add_interval_fiveminutes($schedules) {
+	$schedules['minutes_5'] = array(
+		'interval'	=> 300, 
+		'display'	=> 'Once every 5 minutes'
+	);
+ 	return $schedules;
+}
+
+// Set up the job
+add_action('run_create_feedsubmissions', 'create_feedsubmissions');
+function activate_create_feedsubmissions() {
+	if ( !wp_next_scheduled( 'run_create_feedsubmissions' ) ) {
+		wp_schedule_event( time(), 'minutes_5', 'run_create_feedsubmissions');
+	}
+}
+add_action('wp', 'activate_create_feedsubmissions');
 
 
 /**

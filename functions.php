@@ -335,7 +335,7 @@ function create_feedsubmissions() {
  * Remove the functions below to disable automated feed submission generation.
  *
  **/
-
+/*
 // Add 5-minute interval to wp schedules
 add_filter('cron_schedules', 'add_interval_fiveminutes');
 function add_interval_fiveminutes($schedules) {
@@ -354,7 +354,7 @@ function activate_create_feedsubmissions() {
 	}
 }
 add_action('wp', 'activate_create_feedsubmissions');
-
+*/
 
 /**
  * Display FeedSubmission content on the front-end.

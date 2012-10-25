@@ -29,7 +29,7 @@
 		<div class="span12" id="content-col">
 			<?php
 				var_dump($fromtime);
-				if ($from !== '') {
+				if ($from !== '' && $fromtime > date('Y-m-d H:i:s', strtotime('January 2, 1970'))) {
 					while ( $loop->have_posts() ) : $loop->the_post();	
 						// need to subtract 4 hours from post_modified for other servers
 						// Webcom should compare an unmodified post_modified value						

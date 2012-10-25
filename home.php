@@ -86,10 +86,30 @@
 					$container.prepend( boxes ).masonry( 'reload' );
 					
 					// Update newPostsURL with correct time interval after refresh
+					// TODO: fix this to handle months, years
 					var fromInt = newPostsURL.split('from='),
 						fromInt = parseInt(fromInt[1]);
 					
-					var fromTime = fromInt + (<?=$autorefresh_interval?> * 100); //  *100 for adding to Minute value
+					fromInt = fromInt + (<?=$autorefresh_interval?> * 100); //  *100 for adding to Minute value
+					
+					fromInt = fromInt.toString(); // so we can use substr
+					
+					var fromDay = fromInt.substr(0,8),
+						fromHr	= fromInt.substring(8,10),
+						fromMin	= fromInt.substr(10,14);
+						
+					if (fromMin > 5999) {
+						fromMin = '0000';
+						fromHr = parseInt(fromHr) + 1;
+					}
+					if (fromHr > 24) {
+						fromHr = '00';
+						fromDay = parseInt(fromDay) + 1;
+					}
+					
+					fromInt = "" + fromDay + fromHr + fromMin; // force contatenation
+					var fromTime = parseInt(fromInt);
+					
 					$('#new-posts a').attr('href', '<?=site_url()?>/newposts/?from=' + fromTime);
 			   }
 			});

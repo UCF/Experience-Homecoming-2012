@@ -102,7 +102,7 @@
 						fromMin = '0000';
 						fromHr = parseInt(fromHr) + 1;
 					}
-					if (fromHr > 24) {
+					if (fromHr > 23) {
 						fromHr = '00';
 						fromDay = parseInt(fromDay) + 1;
 					}

@@ -11,8 +11,6 @@ Flickr, Instagram, and Twitter feeds.
 * (none)
 
 ### Required installation settings:
-* Upon theme installation, create a new cron job that runs 
-functions/feedsubmission-generator.php every 5 minutes
 * Create a new top-level page with slug 'newposts' (used to grab new posts via 
 autorefresh)
 * Create a new top-level page with slug 'admin-update-status' (used to 

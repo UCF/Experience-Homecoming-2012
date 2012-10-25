@@ -5,7 +5,9 @@
 	// Build a new query based on time parameters set
 	
 	$from 		= is_numeric($_GET['from']) ? $_GET['from'] : '';
-	$fromtime 	= date('Y-m-d H:i:s', strtotime($_GET['from'] + 40000 )); // Add 4 hrs to match WP GMT timestamps
+	// Webcom requires +4 hours to match WP GMT timestamps
+	//$fromtime 	= date('Y-m-d H:i:s', strtotime($_GET['from'] + 40000 )); // Add 4 hrs to match WP GMT timestamps
+	$fromtime 	= date('Y-m-d H:i:s', strtotime($_GET['from']));
 	
 	$args = array( 
 		'post_type' 	 => 'feedsubmission',

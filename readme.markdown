@@ -11,6 +11,8 @@ Flickr, Instagram, and Twitter feeds.
 * (none)
 
 ### Required installation settings:
+* Add a task to the server to run functions/feedsubmission-generator.php every
+5 minutes
 * Create a new top-level page with slug 'newposts' (used to grab new posts via 
 autorefresh)
 * Create a new top-level page with slug 'admin-update-status' (used to 

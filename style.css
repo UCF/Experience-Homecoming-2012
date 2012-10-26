@@ -74,6 +74,8 @@ h1 {
 	margin-top: 20px;
 }
 h3 { line-height: 25px; margin-bottom: 10px; }
+h3 a { color: #666; }
+h3 a:hover { color: #226666; }
 h4 { 
 	font-family: 'LeagueGothicRegular', sans-serif; 
 	font-size: 20px; 

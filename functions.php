@@ -392,7 +392,15 @@ function display_feedsubmission($post) {
 	
 	<div class="box" id="<?=$service?>-<?=$post->ID?>">
 		<div class="box-inner">
-			<h3><?=the_title();?></h3>
+			<h3>
+				<?php 
+					if ($service == 'twitter') {
+						print $post->post_content; 
+					} else { 
+						print the_title();
+					}
+				?>
+			</h3>
 			<?php
 				// Self posts should display a featured image, if one is available
 				if ($service == 'selfpost') {

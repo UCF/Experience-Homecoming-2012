@@ -384,6 +384,9 @@ function display_feedsubmission($post) {
 			$author = 'UCF';
 			$pub_date = date('F j Y, g:i a', strtotime($post->post_modified.' - 4 hours'));
 		default:
+			// By default, assume this is a UCF-generated post
+			$author = 'UCF';
+			$pub_date = date('F j Y, g:i a', strtotime($post->post_modified.' - 4 hours'));
 			break;
 	}
 	

@@ -3,6 +3,7 @@
 	<div class="container-fluid">
 		<div class="row-fluid">	
 			<div class="span12" id="footer">
+				<p><small>Opinions expressed on this website are solely the opinions of their authors and do not necessarily reflect the opinions of the University of Central Florida.</small></p>
 				<p><small>All Instagram&trade; logos and trademarks displayed on this website are property of Instagram, Inc.</small></p>
 			</div> 
 		</div> <!-- .row-fluid -->

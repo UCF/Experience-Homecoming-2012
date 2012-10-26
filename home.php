@@ -101,10 +101,12 @@
 					if (fromMin > 5999) {
 						fromMin = '0000';
 						fromHr = parseInt(fromHr) + 1;
+						fromHr = fromHr.toString(); // prevent '10' from being appended in fromTime as '1'
 					}
 					if (fromHr > 23) {
 						fromHr = '00';
 						fromDay = parseInt(fromDay) + 1;
+						fromDay = fromDay.toString();
 					}
 					
 					fromInt = "" + fromDay + fromHr + fromMin; // force contatenation

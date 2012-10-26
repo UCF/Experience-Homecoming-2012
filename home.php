@@ -83,7 +83,9 @@
 					var newPostsURL = $('#new-posts a').attr('href');
 					var data = $(data),
 						boxes = data.find('div.box');
-					$container.prepend( boxes ).masonry( 'reload' );
+					$container.prepend( boxes ).imagesLoaded(function() {
+						$container.masonry( 'reload' );
+					});
 					
 					// Update newPostsURL with correct time interval after refresh
 					// TODO: fix this to handle months, years

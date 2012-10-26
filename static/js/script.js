@@ -53,6 +53,13 @@ Generic.mobileNavBar = function($) {
 	}
 }
 
+
+removeLastCommas = function($) {
+	$('#header-taglist .comma:last-child').hide();
+	$('#header-servicelist .comma:last-child').hide();
+}
+
+
 if (typeof jQuery != 'undefined'){
 	jQuery(document).ready(function($) {
 		//Webcom.slideshow($);
@@ -64,5 +71,6 @@ if (typeof jQuery != 'undefined'){
 		Generic.defaultMenuSeparators($);
 		Generic.removeExtraGformStyles($);
 		Generic.mobileNavBar($);
+		removeLastCommas($);
 	});
 }else{console.log('jQuery dependancy failed to load');}

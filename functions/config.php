@@ -262,6 +262,8 @@ Config::$scripts = array(
 	array('name' => 'base-script',  'src' => THEME_JS_URL.'/webcom-base.js',),
 	THEME_JS_URL.'/jquery.imagesloaded.min.js',
 	THEME_JS_URL.'/jquery.infinitescroll.min.js',
+	THEME_JS_URL.'/scroll-startstop.events.jquery.js',
+	THEME_JS_URL.'/jquery.lazyload.min.js',
 	THEME_JS_URL.'/jquery.masonry.min.js',
 	array('name' => 'theme-script', 'src' => THEME_JS_URL.'/script.js',),
 );

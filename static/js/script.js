@@ -72,5 +72,6 @@ if (typeof jQuery != 'undefined'){
 		Generic.removeExtraGformStyles($);
 		Generic.mobileNavBar($);
 		removeLastCommas($);
+		archiveLazyLoadSetup($);
 	});
 }else{console.log('jQuery dependancy failed to load');}

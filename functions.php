@@ -412,7 +412,7 @@ function display_feedsubmission($post) {
 						print '<a target="_blank" href="'.get_post_meta($post->ID, 'feedsubmission_links_to', true).'">';
 					}
 					if (get_the_post_thumbnail($post->ID)) {
-						print get_the_post_thumbnail($post->ID);
+						print '<img src="static/img/img-loading.png" data-original="'.wp_get_attachment_url(get_post_thumbnail_id($post->ID)).'" />';
 					}
 					if (get_post_meta($post->ID, 'feedsubmission_links_to', true)) {
 						print '</a>';
@@ -420,44 +420,23 @@ function display_feedsubmission($post) {
 				}
 				// Twitter submission titles and content are the same, so only display it once
 				if ($service !== 'twitter') {
-					the_content();
+					// Parse all image markup and replace with LazyLoad formatting
+					$content = $post->post_content;
+					$dom = new DOMDocument;
+					$dom->loadHTML($content);
+					foreach ($dom->getElementsByTagName('img') as $img) {
+						$imgsrc = $img->getAttribute('src');
+						$img->setAttribute('src','static/img/img-loading.png');
+						$img->setAttribute('data-original', $imgsrc);
+						$content = $dom->saveHtml();
+						print $content;
+					}
 				}
 			?>
 			<p class="post-info <?=$service?>">
 				<small>via <?=$author?> <span class="<?=$service?>">on <?=ucfirst($service)?></span><br/>
 				<span class="pubtime">at <?=$pub_date?></span></small>
 			</p>
-			<?php
-				// If the user is logged in and has editing capabilities, display editing options 
-				if (is_user_logged_in() && current_user_can('edit_post')) { ?>
-				<div class="edit-options">
-					<p class="post-status"><strong>Post status:</strong>
-						<?php 
-						switch ($post->post_status) {
-							case 'publish':
-								print '<span class="label label-success">Published</span>';
-								break;
-							default:
-								print '<span class="label">'.ucfirst($post->post_status).'</span>';
-								break;
-						}
-						?>
-					</p>
-					<div class="btn-group">
-						<?php if ($post->post_status !== 'publish') { ?>
-						<button class="btn btn-small edit-approve" value="<?=$post->ID?>"
-							data-approve-url="<?=site_url()?>/admin-update-status/?id=<?=$post->ID?>&status=p">
-							<i class="icon-ok"></i> Approve
-						</button>
-						<?php } ?>
-						<button class="btn btn-small edit-delete" value="<?=$post->ID?>" 
-							data-trash-url="<?=site_url()?>/admin-update-status/?id=<?=$post->ID?>&status=t">
-							<i class="icon-trash"></i> Trash
-						</button>
-					</div>
-					<a class="btn btn-small editlink" target="_blank" href="<?=get_edit_post_link($post->ID)?>"><i class="icon-edit"></i> Edit Post</a>
-				</div>
-			<?php } ?>
 		</div>
 	</div>
 	

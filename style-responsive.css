@@ -28,7 +28,7 @@
 	span.comma { font-size: 16px; }
 	#header-servicelist .servicelist-service { font-size: 12px; }
 
-	#home #content-col { margin-top: 130px; }
+	#home #content-col, #testing #content-col { margin-top: 130px; }
 
 	#infscr-loading {
 		left: 34%;

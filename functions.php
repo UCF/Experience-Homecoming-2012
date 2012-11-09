@@ -411,8 +411,9 @@ function display_feedsubmission($post) {
 					if (get_post_meta($post->ID, 'feedsubmission_links_to', true)) {
 						print '<a target="_blank" href="'.get_post_meta($post->ID, 'feedsubmission_links_to', true).'">';
 					}
-					if (get_the_post_thumbnail($post->ID)) {
-						print '<img src="static/img/img-loading.png" data-original="'.wp_get_attachment_url(get_post_thumbnail_id($post->ID)).'" />';
+					if (get_post_thumbnail_id($post->ID)) {
+						$post_thumb = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID));
+						print '<img src="static/img/img-loading.png" data-original="'.$post_thumb[0].'" />';
 					}
 					if (get_post_meta($post->ID, 'feedsubmission_links_to', true)) {
 						print '</a>';
@@ -422,14 +423,19 @@ function display_feedsubmission($post) {
 				if ($service !== 'twitter') {
 					// Parse all image markup and replace with LazyLoad formatting
 					$content = $post->post_content;
-					$dom = new DOMDocument;
-					$dom->loadHTML($content);
-					foreach ($dom->getElementsByTagName('img') as $img) {
-						$imgsrc = $img->getAttribute('src');
-						$img->setAttribute('src','static/img/img-loading.png');
-						$img->setAttribute('data-original', $imgsrc);
-						$content = $dom->saveHtml();
-						print $content;
+					if ($content) {
+						$dom = new DOMDocument;
+						$dom->loadXML($content);
+						if ($dom->getElementsByTagName('img')) {
+							foreach ($dom->getElementsByTagName('img') as $img) {
+								$imgsrc = $img->getAttribute('src');
+								$img->setAttribute('src','static/img/img-loading.png');
+								$img->setAttribute('data-original', $imgsrc);
+							}
+						}
+						$archive_content = $dom->saveXML();
+						$archive_content = preg_replace('/<\?xml.*\?>/', '', $archive_content);
+						print $archive_content;
 					}
 				}
 			?>

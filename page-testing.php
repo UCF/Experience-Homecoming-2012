@@ -18,6 +18,18 @@
 <div class="container-fluid">
 	<div class="row-fluid page-content" id="testing">
 		<div class="span12" id="content-col">
+		
+			<div class="modal fade" id="archivemodal">
+				<div class="modal-body">
+					<p>This is an archived version of the Experience UCF website's content for Homecoming 2012.  Content in this archive was published from 10/25/2012 - 11/06/2012.  Please note that this is not an exact replica of the original website; dependencies on WordPress and dynamically-loaded content have been removed, as well as some stylistic elements (animated tile readjustment.)</p>
+					<p>Images will load as you scroll down.  Please be patient; image loading may take extra time due to the large amount of content being processed.</p>
+					<p>Due to the extensive amount of content to display, this page may not perform optimally on older machines or browsers.</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal">Close</a>
+				</div>
+			</div>
+			
 			<?php
 				while ( $loop->have_posts() ) : $loop->the_post();
 					print display_feedsubmission($post);
@@ -39,7 +51,7 @@
 					return containerWidth / 4;
 				},*/
 				columnWidth: 0,
-				isAnimated: true,
+				isAnimated: false,
 			});
 		});
 		
@@ -47,11 +59,15 @@
 		$('.box-inner img').lazyload({
 			event: 'scrollstop',
 			effect : 'fadeIn',
-			load : function()
-            {
-                $container.masonry('reload');
+			load : function() {
+                setTimeout(function() {
+					$container.masonry('reload');
+				}, 100);
             }
 		});
+		
+		// Call modal
+		$('#archivemodal').modal();
 	});
 	</script>
 		

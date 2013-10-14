@@ -234,7 +234,6 @@ Config::$links = array(
 
 Config::$styles = array(
 	array('admin' => True, 'src' => THEME_CSS_URL.'/admin.css',),
-	'http://universityheader.ucf.edu/bar/css/bar.css',
 	THEME_STATIC_URL.'/bootstrap/build/css/bootstrap.css',
 );
 
@@ -257,7 +256,7 @@ if ($theme_options['bootstrap_enable_responsive'] == 1) {
 
 Config::$scripts = array(
 	array('admin' => True, 'src' => THEME_JS_URL.'/admin.js',),
-	'http://universityheader.ucf.edu/bar/js/university-header.js',
+	'//universityheader.ucf.edu/bar/js/university-header.js?use-bootstrap-overrides=1',
 	THEME_STATIC_URL.'/bootstrap/build/js/bootstrap.js',
 	array('name' => 'base-script',  'src' => THEME_JS_URL.'/webcom-base.js',),
 	THEME_JS_URL.'/jquery.imagesloaded.min.js',

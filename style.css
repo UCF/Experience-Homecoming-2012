@@ -5,37 +5,6 @@ Github Theme URI: https://github.com/ucf/Experience-Homecoming-2012.git
 Version: v1.0.6
 */
 
-/* UCF Header Styles */
-
-#UCFHBSearch_ucf fieldset #q {
-	line-height: 11px;
-	color: #000000;
-	padding: 2px!important;
-	font-size: 11px;
-	font-family: 'Lucida Grande',sans-serif;
-	height: 13px;
-	border-radius: 0;
-	webkit-border-radius: 0;
-	moz-border-radius: 0;
-	margin-bottom: 0;
-	margin-top: 1px;
-}
-
-select#UCFHBHeaderLinks {
-	height: 18px;
-	font-size: 11px;
-	color: #000000;
-	font-family: 'Lucida Grande', sans-serif;
-	border-radius: 0;
-	webkit-border-radius: 0;
-	moz-border-radius: 0;
-	margin-bottom: 0;
-	margin-top: 1px;
-	padding: 0;
-}
-
-#UCFHBHeader * {height:auto;}
-
 /* Site Styles */
 
 @font-face {
@@ -49,12 +18,11 @@ select#UCFHBHeaderLinks {
     font-style: normal;
 }
 
-#UCFHBHeader { position: fixed; top: 0; width: 100%; z-index: 999; }
-#UCFHBWrapper { }
+#ucfhb { position: fixed !important; top: 0; z-index: 999; }
 
 #header { 
 	position: fixed; 
-	top: 38px; 
+	top: 50px; 
 	height: 200px; 
 	background: #9f9e9e url('static/img/stripe-bg.png') repeat;
 	z-index: 999; 
